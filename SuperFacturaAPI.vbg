@@ -1,0 +1,3 @@
+VBGROUP 5.0
+StartupProject=Ejemplo\Ejemplo.vbp
+Project=SuperFacturaAPI\SuperFacturaAPI.vbp
