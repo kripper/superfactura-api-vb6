@@ -21,15 +21,15 @@ Private oZLIB As New cZLIB
 
 Public Sub SetSavePDF(outputFile As String)
     savePDF = outputFile
-    AddJSONOption "getPDF", "1"
+    SetOption "getPDF", "1"
 End Sub
 
 Public Sub SetSaveXML(outputFile As String)
     saveXML = outputFile
-    AddJSONOption "getXML", "1"
+    SetOption "getXML", "1"
 End Sub
 
-Public Sub AddJSONOption(key As String, val As String)
+Public Sub SetOption(key As String, val As String)
     If jsonOptions <> "" Then jsonOptions = jsonOptions + ","
     jsonOptions = jsonOptions + EscapeArgument(key) + ":" + EscapeArgument(val)
 End Sub
@@ -96,7 +96,7 @@ Private Function decodeBase64(ByVal strData As String) As String
 End Function
 
 Public Function SendDTE(jsonData As String, ambiente As String) As apiResult
-    AddJSONOption "ambiente", ambiente
+    SetOption "ambiente", ambiente
 
     Set SendDTE = New apiResult
 

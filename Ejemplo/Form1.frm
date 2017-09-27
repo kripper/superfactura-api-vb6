@@ -77,7 +77,7 @@ Private Sub cmdEmitirFactura_Click()
 
     ' Enviar documentID (importante para evitar documentos duplicados en caso de falla de red y reenvío):
     ' Si se envía un ID ya utilizado, se retornará el mismo documento, en vez de crear uno nuevo.
-    api.AddJSONOption "documentID", idInterno
+    api.SetOption "documentID", idInterno
 
     If chkDownloadPDF.Value Then
         ' Indicar que queremos guardar los PDF (original y copia cedible)
