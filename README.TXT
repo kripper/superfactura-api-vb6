@@ -1,1 +1,1 @@
-Para que funcione la API, se debe copiar el archivo SuperFacturaAPI\libs\zlibwapi.dll en el directorio c:\windows\system32 o equivalente.
+Para que funcione la API, se deben copiar los archivos ubicados en SuperFacturaAPI\libs\ en el directorio c:\windows\system32 o equivalente.
