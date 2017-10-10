@@ -21,6 +21,7 @@
 *.frm text eol=crlf
 *.log text eol=crlf
 *.vbp text eol=crlf
+*.vbg text eol=crlf
 *.cls text eol=crlf
 *.vbw text eol=crlf
 *.dsr text eol=crlf
