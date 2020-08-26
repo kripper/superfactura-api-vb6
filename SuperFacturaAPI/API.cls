@@ -18,6 +18,7 @@ Private jsonOptions As String
 Private savePDF As String
 Private saveXML As String
 Private oZLIB As New cZLIB
+Public url As String
 
 Public Sub SetSavePDF(outputFile As String)
     savePDF = outputFile
@@ -36,9 +37,17 @@ End Sub
 
 Private Function SendRequest(jsonData As String, jsonOptions As String) As String
     Dim req As New WinHttpRequest
+    
+    ' Ignorar validación SSL ya que generalmente los entornos con VB6 no
+    ' soportan los certificados SSL.
+    ' Si su aplicación se ejecutará en Windows 10 o superior puede comentar esta linea.
+    req.Option(WinHttpRequestOption_SslErrorIgnoreFlags) = 13056
+    
     req.SetTimeouts 50000, 50000, 50000, 50000
 
-    req.Open "POST", "https://superfactura.cl/?a=json", False
+    If url = "" Then url = "https://superfactura.cl"
+
+    req.Open "POST", url & "/?a=json", False
 
     req.SetRequestHeader "Content-Type", "application/x-www-form-urlencoded"
     req.SetRequestHeader "User-Agent", "SuperFacturaAPI-VB6-v1.0"
@@ -73,7 +82,7 @@ Private Function encodeBase64(ByRef arrData() As Byte) As String
     Set objXML = New MSXML2.DOMDocument
     
     Set objNode = objXML.createElement("b64")
-    objNode.DataType = "bin.base64"
+    objNode.dataType = "bin.base64"
     objNode.nodeTypedValue = arrData
     encodeBase64 = objNode.Text
  
@@ -87,7 +96,7 @@ Private Function decodeBase64(ByVal strData As String) As String
     
     Set objXML = New MSXML2.DOMDocument
     Set objNode = objXML.createElement("b64")
-    objNode.DataType = "bin.base64"
+    objNode.dataType = "bin.base64"
     objNode.Text = strData
     decodeBase64 = StrConv(objNode.nodeTypedValue, vbUnicode)
     
@@ -95,10 +104,10 @@ Private Function decodeBase64(ByVal strData As String) As String
     Set objXML = Nothing
 End Function
 
-Public Function SendDTE(jsonData As String, ambiente As String) As apiResult
+Public Function SendDTE(jsonData As String, ambiente As String) As APIResult
     SetOption "ambiente", ambiente
 
-    Set SendDTE = New apiResult
+    Set SendDTE = New APIResult
 
     Dim output As String
     output = SendRequest(jsonData, "{" + jsonOptions + "}")
@@ -120,6 +129,7 @@ Public Function SendDTE(jsonData As String, ambiente As String) As apiResult
     If appRes.Item("ok") = "1" Then
         SendDTE.ok = True
         SendDTE.folio = folio
+        SendDTE.escpos = appRes.Item("escpos")
 
         If savePDF <> "" Then
             WriteFile savePDF & ".pdf", decodeBase64(appRes.Item("pdf"))
