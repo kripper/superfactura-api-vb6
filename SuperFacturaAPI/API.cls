@@ -18,7 +18,38 @@ Private jsonOptions As String
 Private savePDF As String
 Private saveXML As String
 Private oZLIB As New cZLIB
-Public url As String
+Public URL As String
+
+Private Const CP_UTF8 = 65001
+
+Private Declare Function WideCharToMultiByte Lib "kernel32" ( _
+    ByVal CodePage As Long, _
+    ByVal dwFlags As Long, _
+    ByVal lpWideCharStr As Long, _
+    ByVal cchWideChar As Long, _
+    ByVal lpMultiByteStr As Long, _
+    ByVal cbMultiByte As Long, _
+    ByVal lpDefaultChar As Long, _
+    ByVal lpUsedDefaultChar As Long) As Long
+
+Public Function Utf8BytesFromString(strInput As String) As Byte()
+    Dim nBytes As Long
+    Dim abBuffer() As Byte
+    ' Catch empty or null input string
+    Utf8BytesFromString = vbNullString
+    If Len(strInput) < 1 Then Exit Function
+    ' Get length in bytes *including* terminating null
+    nBytes = WideCharToMultiByte(CP_UTF8, 0&, ByVal StrPtr(strInput), -1, 0&, 0&, 0&, 0&)
+    ' We don't want the terminating null in our byte array, so ask for `nBytes-1` bytes
+    ReDim abBuffer(nBytes - 2)  ' NB ReDim with one less byte than you need
+    nBytes = WideCharToMultiByte(CP_UTF8, 0&, ByVal StrPtr(strInput), -1, ByVal VarPtr(abBuffer(0)), nBytes - 1, 0&, 0&)
+    Utf8BytesFromString = abBuffer
+End Function
+
+Public Function UTF8_URLEncode(str As String) As String
+    UTF8_URLEncode = URLUtility.URLEncode(StrConv(Utf8BytesFromString(str), vbUnicode))
+End Function
+
 
 Public Sub SetSavePDF(outputFile As String)
     savePDF = outputFile
@@ -45,9 +76,9 @@ Private Function SendRequest(jsonData As String, jsonOptions As String) As Strin
     
     req.SetTimeouts 50000, 50000, 50000, 50000
 
-    If url = "" Then url = "https://superfactura.cl"
+    If URL = "" Then URL = "https://superfactura.cl"
 
-    req.Open "POST", url & "/?a=json", False
+    req.Open "POST", URL & "/?a=json", False
 
     req.SetRequestHeader "Content-Type", "application/x-www-form-urlencoded"
     req.SetRequestHeader "User-Agent", "SuperFacturaAPI-VB6-v1.0"
@@ -55,7 +86,7 @@ Private Function SendRequest(jsonData As String, jsonOptions As String) As Strin
     'On Local Error Resume Next
     
     Dim postString As String
-    postString = "user=" & user & "&pass=" & password & "&content=" & URLUtility.URLEncode(jsonData) & "&options=" & URLUtility.URLEncode(jsonOptions)
+    postString = "user=" & user & "&pass=" & password & "&content=" & UTF8_URLEncode(jsonData) & "&options=" & UTF8_URLEncode(jsonOptions)
     
     req.Send postString
     
@@ -116,7 +147,7 @@ Public Function SendDTE(jsonData As String, ambiente As String) As APIResult
     Set obj = JSON.parse(output)
 
     If obj.Item("ack") <> "ok" Then
-        SendDTE.error = IIf(obj.Item("response").Item("title") <> "", obj.Item("response").Item("title") & " - ", "" & obj.Item("response").Item("message"))
+        SendDTE.error = IIf(obj.Item("response").Item("title") <> "", obj.Item("response").Item("title") & " - ", "") & obj.Item("response").Item("message")
         Exit Function
     End If
 
@@ -147,11 +178,11 @@ Public Function SendDTE(jsonData As String, ambiente As String) As APIResult
     End If
 End Function
 
-Sub WriteFile(filename As String, data As String)
+Sub WriteFile(filename As String, Data As String)
     Dim f As Integer
     f = FreeFile()
     Open filename For Binary As #f
-    Put #f, , data
+    Put #f, , Data
     Close #f
 End Sub
 
@@ -160,3 +191,5 @@ Private Function EscapeArgument(arg As String) As String
     arg = Replace(arg, "\""", "\\""")
     EscapeArgument = """" & arg & """"
 End Function
+
+

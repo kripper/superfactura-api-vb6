@@ -106,6 +106,9 @@ Private Sub cmdEmitirFactura_Click()
         ' Obtener formato Esc/Pos para impresoras térmicas
         ' Ver: https://blog.superfactura.cl/impresion-con-impresoras-termicas/
         api.SetOption "getEscPos", True
+		
+        ' Indicar el modelo de impresora
+        api.SetOption "modelo", "default"
     End If
 
     If chkDownloadPDF.Value Then

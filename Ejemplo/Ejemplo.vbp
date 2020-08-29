@@ -1,8 +1,8 @@
 Type=Exe
-Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#..\..\..\..\..\WINDOWS\system32\stdole2.tlb#OLE Automation
+Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\WINDOWS\system32\stdole2.tlb#OLE Automation
 Reference=*\A..\SuperFacturaAPI\SuperFacturaAPI.vbp
-Reference=*\G{F5078F18-C551-11D3-89B9-0000F81FE221}#2.6#0#..\..\..\..\..\WINDOWS\system32\msxml2.dll#Microsoft XML, v2.6
-Reference=*\G{D63E0CE2-A0A2-11D0-9C02-00C04FC99C8E}#2.0#0#..\..\..\..\..\WINDOWS\system32\msxml.dll#Microsoft XML, version 2.0
+Reference=*\G{F5078F18-C551-11D3-89B9-0000F81FE221}#2.6#0#C:\WINDOWS\system32\msxml2.dll#Microsoft XML, v2.6
+Reference=*\G{D63E0CE2-A0A2-11D0-9C02-00C04FC99C8E}#2.0#0#C:\WINDOWS\system32\msxml.dll#Microsoft XML, version 2.0
 Form=Form1.frm
 Startup="Form1"
 Command32=""

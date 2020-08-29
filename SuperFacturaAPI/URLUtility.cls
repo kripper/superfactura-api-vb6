@@ -68,7 +68,7 @@ Public Function URLDecode( _
     End If
     
     If HRESULT <> S_OK Then
-        Err.Raise Err.LastDllError, "URLUtility.URLDecode", _
+        err.Raise err.LastDllError, "URLUtility.URLDecode", _
                   "System error"
     End If
     
@@ -82,10 +82,11 @@ Public Function URLEncode( _
     Dim cchEscaped As Long
     Dim HRESULT As Long
     
-    If Len(URL) > INTERNET_MAX_URL_LENGTH Then
-        Err.Raise &H8004D700, "URLUtility.URLEncode", _
-                  "URL parameter too long"
-    End If
+    ' DISABLED: Usaremos esta función para enviar por POST
+    'If Len(URL) > INTERNET_MAX_URL_LENGTH Then
+    '    err.Raise &H8004D700, "URLUtility.URLEncode", _
+    '              "URL parameter too long"
+    'End If
     
     cchEscaped = Len(URL) * 1.5
     URLEncode = String$(cchEscaped, 0)
@@ -96,7 +97,7 @@ Public Function URLEncode( _
     End If
 
     If HRESULT <> S_OK Then
-        Err.Raise Err.LastDllError, "URLUtility.URLEncode", _
+        err.Raise err.LastDllError, "URLUtility.URLEncode", _
                   "System error"
     End If
     
