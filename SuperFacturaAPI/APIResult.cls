@@ -13,8 +13,8 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 Option Explicit
 
-Public folio As Integer ' Entrega el folio asignado al DTE.
-Public ok As Boolean    ' Indica que el DTE se generó correctamente.
+Public folio As Long ' Entrega el folio asignado al DTE.
+Public ok As Boolean    ' Indica que el DTE se generï¿½ correctamente.
 Public error As String
 Public escpos As String
 
